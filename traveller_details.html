@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripCircle - Traveller Details & Confirmation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --accent-color: #10b981;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --error-color: #ef4444;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: var(--white);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--white);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            padding: 0.5rem 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .dropdown:hover .dropdown-menu,
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: var(--bg-light);
+            color: var(--primary-color);
+        }
+
+        .cta-button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .main-content {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .step-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .booking-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .helper-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: var(--bg-light);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .room-section {
+            margin-bottom: 2rem;
+        }
+
+        .room-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .traveller-block {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: var(--bg-light);
+            border-radius: 8px;
+        }
+
+        .traveller-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-label.required::after {
+            content: " *";
+            color: var(--error-color);
+        }
+
+        .form-input,
+        .form-select {
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: var(--white);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-input.error,
+        .form-select.error {
+            border-color: var(--error-color);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .checkbox-group {
+            margin-top: 1.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .checkbox-input {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.75rem;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+        }
+
+        .checkbox-label {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .summary-column {
+            position: sticky;
+            top: 100px;
+        }
+
+        .price-summary {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .price-label {
+            color: var(--text-secondary);
+        }
+
+        .price-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .total-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border-color);
+            background-color: #eff6ff;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .total-label {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .total-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .tax-note {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .coupon-section {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .coupon-header {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .coupon-input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .coupon-input {
+            flex: 1;
+        }
+
+        .apply-button {
+            background-color: var(--accent-color);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .apply-button:hover {
+            background-color: #059669;
+            transform: translateY(-2px);
+        }
+
+        .trip-summary {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .trip-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .trip-detail {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .trip-detail i {
+            color: var(--primary-color);
+            margin-right: 0.75rem;
+            margin-top: 0.2rem;
+            width: 20px;
+        }
+
+        .trip-subsection {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .subsection-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .subsection-content {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding-left: 1.75rem;
+        }
+
+        .confirm-button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .confirm-button:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .confirm-button:disabled {
+            background-color: var(--secondary-color);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .gst-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--bg-light);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .gst-section.active {
+            display: block;
+        }
+
+        .footer {
+            background-color: var(--white);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-icon {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .social-icon:hover {
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .support-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .support-widget:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+        }
+
+        .support-widget i {
+            font-size: 1.25rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .modal-text {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        @media (max-width: 1024px) {
+            .booking-container {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-column {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--white);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 0 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .support-widget {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .step-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .coupon-input-group {
+                flex-direction: column;
+            }
+
+            .apply-button {
+                width: 100%;
+            }
+
+            .modal-content {
+                padding: 2rem;
+                margin: 1rem;
+            }
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        *:focus-visible {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-globe-americas"></i>
+                TripCircle
+            </a>
+            
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" id="destinationsToggle">
+                            Destinations <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="dropdown-menu" id="destinationsMenu">
+                            <a href="#" tabindex="0">France</a>
+                            <a href="#" tabindex="0">Netherlands</a>
+                            <a href="#" tabindex="0">The United Kingdom</a>
+                            <a href="#" tabindex="0">Switzerland</a>
+                            <a href="#" tabindex="0">Germany</a>
+                            <a href="#" tabindex="0">Italy</a>
+                        </div>
+                    </li>
+                    <li><a href="#">My Booking</a></li>
+                    <li><a href="#">Organize a Group</a></li>
+                    <li><a href="#" class="cta-button">Book With Expert</a></li>
+                </ul>
+            </nav>
+
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <h1 class="step-title">Step 4: Traveller Details & Confirmation</h1>
+
+        <div class="booking-container">
+            <div class="form-column">
+                <div class="card">
+                    <h2 class="card-title">Traveller Details</h2>
+                    <div class="helper-text">
+                        <i class="fas fa-info-circle"></i>
+                        Please enter names as per valid ID proof and contact information for guests traveling on this trip.
+                    </div>
+
+                    <form id="travellerForm">
+                        <div class="room-section">
+                            <h3 class="room-title">Room 1</h3>
+
+                            <div id="travellersContainer">
+                            </div>
+
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" class="checkbox-input confirmation-checkbox" id="passportCheck" required>
+                                    <label class="checkbox-label" for="passportCheck">
+                                        I have verified that names being entered are as per passport
+                                    </label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" class="checkbox-input confirmation-checkbox" id="validityCheck" required>
+                                    <label class="checkbox-label" for="validityCheck">
+                                        I have verified that all passports are valid for 6 months from the date of travel
+                                    </label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" class="checkbox-input confirmation-checkbox" id="detailsCheck" required>
+                                    <label class="checkbox-label" for="detailsCheck">
+                                        I confirm that the above details are correct and I am ready to bear any additional costs arising out of discrepancy in the above details
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Contact Information</h2>
+                    <form id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required" for="email">Email Address</label>
+                                <input type="email" class="form-input" id="email" name="email" placeholder="Enter email address" required>
+                                <span class="error-message" id="emailError">Please enter a valid email</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required" for="phone">Contact Phone</label>
+                                <input type="tel" class="form-input" id="phone" name="phone" placeholder="Enter phone number" required>
+                                <span class="error-message" id="phoneError">Please enter a valid phone number</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required" for="city">City of Residence</label>
+                                <input type="text" class="form-input" id="city" name="city" value="Mumbai" required>
+                                <span class="error-message" id="cityError">Please enter city</span>
+                            </div>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="checkbox-input" id="gstCheck">
+                            <label class="checkbox-label" for="gstCheck">
+                                Use GST number for this booking (Optional)
+                            </label>
+                        </div>
+                        <div class="gst-section" id="gstSection">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="gstNumber">GST Number</label>
+                                    <input type="text" class="form-input" id="gstNumber" name="gstNumber" placeholder="Enter GST number">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="companyName">Company Name</label>
+                                    <input type="text" class="form-input" id="companyName" name="companyName" placeholder="Enter company name">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="summary-column">
+                <div class="price-summary">
+                    <h3 class="summary-title">Your Price Summary</h3>
+                    <div class="price-row">
+                        <span class="price-label">Price per adult</span>
+                        <span class="price-value" id="pricePerAdult">₹ 175,540</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">TCS</span>
+                        <span class="price-value" id="tcsAmount">₹ 17,554</span>
+                    </div>
+                    <div class="total-price">
+                        <span class="total-label">Total Price</span>
+                        <span class="total-value" id="totalPrice">₹ 368,633.00</span>
+                    </div>
+                    <div class="tax-note">(Incl all taxes)</div>
+                </div>
+
+                <div class="coupon-section">
+                    <h3 class="summary-title">Coupon</h3>
+                    <p class="coupon-header">Have a coupon? Redeem here</p>
+                    <div class="coupon-input-group">
+                        <input type="text" class="form-input coupon-input" id="promoCode" placeholder="Enter promo code">
+                        <button class="apply-button" id="applyDiscount">Apply Discount</button>
+                    </div>
+                </div>
+
+                <div class="trip-summary">
+                    <h3 class="trip-title" id="tripName">Amsterdam & Paris Classic</h3>
+                    <div class="trip-detail">
+                        <i class="fas fa-route"></i>
+                        <span><strong>Itinerary:</strong> <span id="tripItinerary">Amsterdam 2N, Paris 3N</span></span>
+                    </div>
+                    <div class="trip-detail">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span><strong>Travel Date:</strong> <span id="tripDate">08 Apr 2026</span></span>
+                    </div>
+                    <div class="trip-detail">
+                        <i class="fas fa-bed"></i>
+                        <span><strong>Room Configuration:</strong> <span id="tripRooms">1 room, 2 adults</span></span>
+                    </div>
+
+                    <div class="trip-subsection">
+                        <div class="subsection-title">
+                            <i class="fas fa-plane"></i> Flights
+                        </div>
+                        <div class="subsection-content">
+                            To and Fro Flights Included (into Amsterdam out of Paris)
+                        </div>
+                    </div>
+
+                    <div class="trip-subsection">
+                        <div class="subsection-title">
+                            <i class="fas fa-hotel"></i> Stay in Amsterdam
+                        </div>
+                        <div class="subsection-content">
+                            Park Plaza Amsterdam Airport or Similar
+                        </div>
+                    </div>
+                </div>
+
+                <button class="confirm-button" id="confirmBooking" disabled>
+                    Confirm Booking
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-copyright">© TripCircle</div>
+            <div class="social-icons">
+                <i class="fab fa-facebook social-icon" aria-label="Facebook"></i>
+                <i class="fab fa-instagram social-icon" aria-label="Instagram"></i>
+                <i class="fab fa-youtube social-icon" aria-label="YouTube"></i>
+                <i class="fab fa-twitter social-icon" aria-label="Twitter"></i>
+            </div>
+        </div>
+    </footer>
+
+    <div class="support-widget" id="supportWidget">
+        <i class="fas fa-headset"></i>
+        <span>We are here to help</span>
+    </div>
+
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="modal-title">Booking Confirmed!</h2>
+            <p class="modal-text">
+                Your booking has been successfully confirmed. You will receive a confirmation email shortly with all the details of your trip.
+            </p>
+            <button class="modal-button" id="closeModal">View Booking Details</button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5050';
+        let currentTotal = 0;
+        let requiredTravellers = 2;
+
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = mobileMenuToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        const destinationsToggle = document.getElementById('destinationsToggle');
+        const destinationsMenu = document.getElementById('destinationsMenu');
+
+        destinationsToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            destinationsMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                destinationsMenu.classList.remove('active');
+            }
+        });
+
+        const gstCheck = document.getElementById('gstCheck');
+        const gstSection = document.getElementById('gstSection');
+
+        gstCheck.addEventListener('change', () => {
+            gstSection.classList.toggle('active', gstCheck.checked);
+        });
+
+        const confirmationCheckboxes = document.querySelectorAll('.confirmation-checkbox');
+        const confirmButton = document.getElementById('confirmBooking');
+
+        function validateField(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorMessage = document.getElementById(fieldId + 'Error');
+            
+            if (!field.value.trim()) {
+                field.classList.add('error');
+                if (errorMessage) errorMessage.classList.add('show');
+                return false;
+            } else {
+                field.classList.remove('error');
+                if (errorMessage) errorMessage.classList.remove('show');
+                return true;
+            }
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('email');
+            const errorMessage = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email.value)) {
+                email.classList.add('error');
+                errorMessage.classList.add('show');
+                return false;
+            } else {
+                email.classList.remove('error');
+                errorMessage.classList.remove('show');
+                return true;
+            }
+        }
+
+        function validatePhone() {
+            const phone = document.getElementById('phone');
+            const errorMessage = document.getElementById('phoneError');
+            const phoneRegex = /^[0-9]{10}$/;
+            
+            if (!phoneRegex.test(phone.value.replace(/\D/g, ''))) {
+                phone.classList.add('error');
+                errorMessage.classList.add('show');
+                return false;
+            } else {
+                phone.classList.remove('error');
+                errorMessage.classList.remove('show');
+                return true;
+            }
+        }
+
+        function checkFormValidity() {
+            let allFieldsValid = true;
+            
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                allFieldsValid = false;
+            }
+
+            const phone = document.getElementById('phone');
+            if (phone.value.replace(/\D/g, '').length < 10) {
+                allFieldsValid = false;
+            }
+
+            const city = document.getElementById('city');
+            if (!city.value.trim()) {
+                allFieldsValid = false;
+            }
+
+            for (let i = 1; i <= requiredTravellers; i++) {
+                const title = document.getElementById(`title${i}`);
+                const firstName = document.getElementById(`firstName${i}`);
+                const lastName = document.getElementById(`lastName${i}`);
+                
+                if (!title || !title.value || !firstName || !firstName.value.trim() || !lastName || !lastName.value.trim()) {
+                    allFieldsValid = false;
+                    break;
+                }
+            }
+
+            let allCheckboxesChecked = true;
+            confirmationCheckboxes.forEach(checkbox => {
+                if (!checkbox.checked) {
+                    allCheckboxesChecked = false;
+                }
+            });
+
+            confirmButton.disabled = !(allFieldsValid && allCheckboxesChecked);
+        }
+
+        document.getElementById('email').addEventListener('blur', validateEmail);
+        document.getElementById('email').addEventListener('input', checkFormValidity);
+
+        document.getElementById('phone').addEventListener('blur', validatePhone);
+        document.getElementById('phone').addEventListener('input', checkFormValidity);
+
+        document.getElementById('city').addEventListener('input', checkFormValidity);
+
+        confirmationCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', checkFormValidity);
+        });
+
+        const applyDiscountBtn = document.getElementById('applyDiscount');
+        const promoCodeInput = document.getElementById('promoCode');
+
+        applyDiscountBtn.addEventListener('click', async () => {
+            const promoCode = promoCodeInput.value.trim();
+            
+            if (!promoCode) {
+                alert('Please enter a promo code');
+                return;
+            }
+
+            applyDiscountBtn.textContent = 'Applying...';
+            applyDiscountBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/apply_promo`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        code: promoCode,
+                        current_total: currentTotal
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const newTotal = result.data.new_total;
+                    const discount = result.data.discount_applied;
+                    
+                    document.getElementById('totalPrice').textContent = `₹ ${newTotal.toLocaleString('en-IN')}`;
+                    currentTotal = newTotal;
+                    
+                    alert(`Promo code "${promoCode}" applied successfully!\nDiscount: ₹ ${discount.toLocaleString('en-IN')}`);
+                    applyDiscountBtn.textContent = 'Applied';
+                    applyDiscountBtn.style.backgroundColor = 'var(--success-color)';
+                    promoCodeInput.disabled = true;
+                    
+                    sessionStorage.setItem('promoCode', promoCode);
+                } else {
+                    alert('Promo code application failed: ' + result.message);
+                    applyDiscountBtn.textContent = 'Apply Discount';
+                    applyDiscountBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Promo code error:', error);
+                alert('An error occurred while applying the promo code.');
+                applyDiscountBtn.textContent = 'Apply Discount';
+                applyDiscountBtn.disabled = false;
+            }
+        });
+
+        const successModal = document.getElementById('successModal');
+        const closeModalBtn = document.getElementById('closeModal');
+
+        confirmButton.addEventListener('click', async () => {
+            let isValid = true;
+            
+            if (!validateEmail()) isValid = false;
+            if (!validatePhone()) isValid = false;
+            if (!validateField('city')) isValid = false;
+
+            let allCheckboxesChecked = true;
+            confirmationCheckboxes.forEach(checkbox => {
+                if (!checkbox.checked) {
+                    allCheckboxesChecked = false;
+                }
+            });
+
+            if (!allCheckboxesChecked) {
+                alert('Please confirm all the mandatory checkboxes');
+                isValid = false;
+            }
+
+            if (isValid) {
+                confirmButton.innerHTML = 'Processing... <span class="spinner"></span>';
+                confirmButton.classList.add('loading');
+
+                const travellers = [];
+                for (let i = 1; i <= requiredTravellers; i++) {
+                    travellers.push({
+                        title: document.getElementById(`title${i}`).value,
+                        first_name: document.getElementById(`firstName${i}`).value,
+                        last_name: document.getElementById(`lastName${i}`).value
+                    });
+                }
+
+                const bookingData = {
+                    package_id: sessionStorage.getItem('packageId'),
+                    departure_date: sessionStorage.getItem('departureDate'),
+                    room_config: sessionStorage.getItem('roomConfig'),
+                    travellers: travellers,
+                    contact: {
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        city: document.getElementById('city').value
+                    },
+                    passport_ack: true,
+                    gst_enabled: gstCheck.checked,
+                    gst_number: gstCheck.checked ? document.getElementById('gstNumber').value : null,
+                    company_name: gstCheck.checked ? document.getElementById('companyName').value : null,
+                    steps_completed: ["Trip Details", "Date Selection", "Price Summary", "Traveller Details"],
+                    promo_code: sessionStorage.getItem('promoCode') || null
+                };
+
+                console.log('Booking Data:', bookingData);
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/confirm_booking`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(bookingData)
+                    });
+
+                    const result = await response.json();
+
+                    confirmButton.innerHTML = 'Confirm Booking';
+                    confirmButton.classList.remove('loading');
+
+                    if (result.status === 'success') {
+                        console.log('Booking confirmed successfully:', result);
+                        successModal.classList.add('active');
+                    } else {
+                        alert('Booking failed: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Booking error:', error);
+                    alert('An error occurred while confirming your booking. Please try again.');
+                    confirmButton.innerHTML = 'Confirm Booking';
+                    confirmButton.classList.remove('loading');
+                }
+            } else {
+                const firstError = document.querySelector('.form-input.error, .form-select.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError.focus();
+                }
+            }
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            successModal.classList.remove('active');
+            console.log('Redirecting to booking details...');
+            alert('In a real application, you would be redirected to your booking details page.');
+        });
+
+        const supportWidget = document.getElementById('supportWidget');
+        supportWidget.addEventListener('click', () => {
+            alert('Support chat would open here. Our team is available 24/7 to assist you!');
+            console.log('Support widget clicked');
+        });
+
+        let lastScroll = 0;
+        const header = document.querySelector('.header');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = 'translateY(0)';
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        destinationsToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                destinationsMenu.classList.toggle('active');
+            }
+        });
+
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) {
+                value = value.slice(0, 10);
+            }
+            e.target.value = value;
+        });
+
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+            });
+        });
+
+        console.log('TripCircle Booking Page Loaded');
+        console.log('Step 4: Traveller Details & Confirmation');
+
+        function announceToScreenReader(message) {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('role', 'status');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.className = 'visually-hidden';
+            announcement.textContent = message;
+            document.body.appendChild(announcement);
+            
+            setTimeout(() => {
+                document.body.removeChild(announcement);
+            }, 1000);
+        }
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'disabled') {
+                    if (!confirmButton.disabled) {
+                        announceToScreenReader('Confirm booking button is now enabled');
+                    }
+                }
+            });
+        });
+
+        observer.observe(confirmButton, { attributes: true });
+
+        async function initializePage() {
+            const quoteData = JSON.parse(sessionStorage.getItem('quoteData') || '{}');
+            const packageId = sessionStorage.getItem('packageId');
+            const departureDate = sessionStorage.getItem('departureDate');
+            const roomConfig = sessionStorage.getItem('roomConfig');
+
+            if (!packageId || !departureDate || !roomConfig) {
+                alert('Booking session expired. Please start from the beginning.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            if (quoteData.price_per_person) {
+                document.getElementById('pricePerAdult').textContent = `₹ ${quoteData.price_per_person.toLocaleString('en-IN')}`;
+                document.getElementById('tcsAmount').textContent = `₹ ${quoteData.tcs.toLocaleString('en-IN')}`;
+                document.getElementById('totalPrice').textContent = `₹ ${quoteData.total.toLocaleString('en-IN')}`;
+                currentTotal = quoteData.total;
+                requiredTravellers = quoteData.total_adults;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/get_package_details/${packageId}`);
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const pkg = result.data;
+                    document.getElementById('tripName').textContent = pkg.name;
+                    document.getElementById('tripItinerary').textContent = pkg.itinerary;
+                }
+            } catch (error) {
+                console.error('Error loading package details:', error);
+            }
+
+            if (departureDate) {
+                const date = new Date(departureDate);
+                const options = { day: '2-digit', month: 'short', year: 'numeric' };
+                document.getElementById('tripDate').textContent = date.toLocaleDateString('en-GB', options);
+            }
+
+            if (roomConfig) {
+                const parts = roomConfig.split('-');
+                if (parts.length >= 2) {
+                    document.getElementById('tripRooms').textContent = `${parts[0]} room, ${parts[1]} adults`;
+                }
+            }
+
+            const travellersContainer = document.getElementById('travellersContainer');
+            for (let i = 1; i <= requiredTravellers; i++) {
+                const travellerBlock = document.createElement('div');
+                travellerBlock.className = 'traveller-block';
+                travellerBlock.innerHTML = `
+                    <div class="traveller-header">Traveller ${i}: Adult</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="title${i}">Title</label>
+                            <select class="form-select" id="title${i}" name="title${i}" required>
+                                <option value="">Select Title</option>
+                                <option value="Mr">Mr</option>
+                                <option value="Mrs">Mrs</option>
+                                <option value="Ms">Ms</option>
+                                <option value="Dr">Dr</option>
+                            </select>
+                            <span class="error-message" id="title${i}Error">Please select a title</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required" for="firstName${i}">First Name</label>
+                            <input type="text" class="form-input" id="firstName${i}" name="firstName${i}" placeholder="Enter first name" required>
+                            <span class="error-message" id="firstName${i}Error">Please enter first name</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required" for="lastName${i}">Last Name</label>
+                            <input type="text" class="form-input" id="lastName${i}" name="lastName${i}" placeholder="Enter last name" required>
+                            <span class="error-message" id="lastName${i}Error">Please enter last name</span>
+                        </div>
+                    </div>
+                `;
+                travellersContainer.appendChild(travellerBlock);
+
+                document.getElementById(`title${i}`).addEventListener('change', checkFormValidity);
+                document.getElementById(`firstName${i}`).addEventListener('input', checkFormValidity);
+                document.getElementById(`lastName${i}`).addEventListener('input', checkFormValidity);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            initializePage();
+            console.log('Page Performance:', {
+                loadTime: performance.now(),
+                domContentLoaded: performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart,
+                fullyLoaded: performance.timing.loadEventEnd - performance.timing.navigationStart
+            });
+        });
+    </script>
+</body>
+</html>

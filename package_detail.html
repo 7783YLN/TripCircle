@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amsterdam & Paris Classic - TripCircle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --accent-color: #f59e0b;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --white: #ffffff;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--white);
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: var(--white);
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--white);
+            box-shadow: var(--shadow-lg);
+            border-radius: 0.5rem;
+            padding: 0.5rem 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .dropdown:hover .dropdown-menu,
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-dark);
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: var(--bg-light);
+            color: var(--primary-color);
+        }
+
+        .cta-button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        .hero-section {
+            position: relative;
+            height: 500px;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                        url('https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=1600&h=500&fit=crop') center/cover;
+            display: flex;
+            align-items: center;
+            color: var(--white);
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hero-pricing {
+            background-color: var(--white);
+            color: var(--text-dark);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            min-width: 300px;
+        }
+
+        .hero-pricing p {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-pricing .price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 3rem;
+        }
+
+        .content-area {
+            min-width: 0;
+        }
+
+        .sticky-pricing-card {
+            position: sticky;
+            top: 100px;
+            background-color: var(--white);
+            border: 2px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            height: fit-content;
+        }
+
+        .sticky-pricing-card .label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sticky-pricing-card .price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .sticky-pricing-card .btn-primary {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .sticky-pricing-card .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .sticky-pricing-card .btn-secondary {
+            width: 100%;
+            background-color: transparent;
+            color: var(--primary-color);
+            padding: 1rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sticky-pricing-card .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .section {
+            background-color: var(--white);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .section-content {
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        .info-table {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 1rem;
+            background-color: var(--bg-light);
+            border-radius: 0.5rem;
+        }
+
+        .info-item i {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-top: 0.2rem;
+        }
+
+        .info-item-content strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--text-dark);
+        }
+
+        .info-item-content span {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .highlights-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .highlights-list li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .highlights-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .accommodation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .hotel-card {
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hotel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hotel-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .hotel-info {
+            padding: 1.5rem;
+        }
+
+        .hotel-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .hotel-details {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .hotel-details p {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hotel-details i {
+            color: var(--primary-color);
+        }
+
+        .included-section {
+            margin-top: 1.5rem;
+        }
+
+        .destination-group {
+            margin-bottom: 2rem;
+        }
+
+        .destination-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .included-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .included-list li {
+            padding: 0.4rem 0;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.3;
+        }
+
+        .included-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0.5rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .accordion {
+            margin-top: 2rem;
+        }
+
+        .accordion-item {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            background-color: var(--bg-light);
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background-color: #e5e7eb;
+        }
+
+        .accordion-header.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-header.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-content.active {
+            max-height: 2000px;
+        }
+
+        .accordion-body {
+            padding: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .footer {
+            background-color: var(--text-dark);
+            color: var(--white);
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-icons a {
+            color: var(--white);
+            font-size: 1.5rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .support-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 2rem;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .support-widget:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .support-widget i {
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sticky-pricing-card {
+                position: relative;
+                top: 0;
+                order: -1;
+            }
+
+            .hero-content {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .hero-pricing {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                flex-direction: column;
+                background-color: var(--white);
+                width: 100%;
+                padding: 2rem;
+                box-shadow: var(--shadow-lg);
+                transition: left 0.3s ease;
+                align-items: flex-start;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+
+            .hero-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .info-table {
+                grid-template-columns: 1fr;
+            }
+
+            .accommodation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .support-widget {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-container {
+                padding: 1rem;
+            }
+
+            .hero-text h1 {
+                font-size: 1.5rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .main-container {
+                padding: 0 1rem;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeIn 0.6s ease;
+        }
+
+        .btn-primary:focus,
+        .btn-secondary:focus,
+        .cta-button:focus {
+            outline: 3px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        a:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane-departure"></i>
+                TripCircle
+            </a>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">
+                            Destinations <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="#">France</a>
+                            <a href="#">Netherlands</a>
+                            <a href="#">The United Kingdom</a>
+                            <a href="#">Switzerland</a>
+                            <a href="#">Germany</a>
+                            <a href="#">Italy</a>
+                        </div>
+                    </li>
+                    <li><a href="#">My Booking</a></li>
+                    <li><a href="#">Organize a Group</a></li>
+                    <li><a href="#" class="cta-button">Book With Expert</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 id="packageName">Amsterdam & Paris Classic</h1>
+                <div class="hero-meta">
+                    <div class="hero-meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="packageItinerary">Amsterdam 2N, Paris 3N</span>
+                    </div>
+                    <div class="hero-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span id="packageDuration">6 days</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-pricing">
+                <p>From</p>
+                <div class="price" id="heroPrice">₹ 175,540</div>
+                <p style="margin-bottom: 1rem;">per person</p>
+                <button class="cta-button" onclick="handleBookNow()">Book Now</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-container">
+        <div class="content-area">
+            <section class="section">
+                <h2 class="section-title">About the trip</h2>
+                <div class="section-content" id="packageDescription">
+                    <p>
+                        Embark on an unforgettable 6-day journey through two of Europe's most enchanting cities—Amsterdam and Paris. 
+                        Begin your adventure in Amsterdam, where you'll explore the city's iconic canals on a scenic glass-roof cruise, 
+                        wander through the historic Dam Square, and visit the vibrant Keukenhof Gardens (seasonal) or the charming 
+                        miniature park of Madurodam. Experience Dutch culture with visits to a traditional wooden shoe factory and cheese farm.
+                    </p>
+                    <p style="margin-top: 1rem;">
+                        Continue your journey to the romantic city of Paris, where you'll be captivated by world-famous landmarks including 
+                        the Eiffel Tower (2nd level access), the majestic Arc de Triomphe, and the elegant Champs-Élysées. Enjoy a magical 
+                        Seine River Cruise and spend a full day at the enchanting Disneyland Paris. En route, stop in Brussels to marvel at 
+                        the Grand Place, the quirky Manneken Pis statue, and the futuristic Atomium.
+                    </p>
+                    <p style="margin-top: 1rem;">
+                        This carefully curated tour blends culture, leisure, and romance, offering comfortable 4-star accommodations, 
+                        delicious meals with Indian and Continental options, and the expertise of an English and Hindi-speaking tour manager. 
+                        All driver and guide tips are included, ensuring a hassle-free and memorable European experience.
+                    </p>
+
+                    <div class="info-table">
+                        <div class="info-item">
+                            <i class="fas fa-user-tie"></i>
+                            <div class="info-item-content">
+                                <strong>Tour Manager</strong>
+                                <span>Included</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-utensils"></i>
+                            <div class="info-item-content">
+                                <strong>Meals</strong>
+                                <span>5 Breakfasts, 1 Lunch, 5 Dinners</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-users"></i>
+                            <div class="info-item-content">
+                                <strong>Max Group Size</strong>
+                                <span>30 people</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-language"></i>
+                            <div class="info-item-content">
+                                <strong>Guide Languages</strong>
+                                <span>English, Hindi</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Highlights</h2>
+                <ul class="highlights-list" id="packageHighlights">
+                    <li>Stay in comfortable 4-star hotels across Amsterdam and Paris</li>
+                    <li>Guided city tour of Amsterdam with a scenic canal cruise</li>
+                    <li>Visit to Keukenhof Gardens (seasonal) or Madurodam</li>
+                    <li>Stop in Brussels to see the Grand Place, Manneken Pis, and Atomium</li>
+                    <li>Guided Paris city tour covering Eiffel Tower (2nd level), Arc de Triomphe, and Champs-Élysées</li>
+                    <li>Romantic Seine River Cruise</li>
+                    <li>Full-day visit to Disneyland Paris</li>
+                    <li>1 Indian Lunch at Brussels</li>
+                    <li>Daily Breakfasts and Dinners with Indian and Continental options</li>
+                    <li>Escorted tour with an English / Hindi speaking Tour Manager</li>
+                    <li>All driver and guide tips included</li>
+                </ul>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Meals</h2>
+                <div class="section-content">
+                    <p>
+                        <i class="fas fa-check-circle" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                        5 Continental Breakfasts, 1 Indian Lunch and 5 Indian Dinners (Choice of Veg / Non Veg / Jain Food)
+                    </p>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Flights</h2>
+                <div class="section-content">
+                    <p>
+                        <i class="fas fa-plane" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                        To and Fro Flights Included (into Amsterdam, out of Paris)
+                    </p>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Accommodation</h2>
+                <div class="accommodation-grid" id="hotelsList">
+                    <div class="hotel-card">
+                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=200&fit=crop" 
+                             alt="Park Plaza Amsterdam Airport" class="hotel-image">
+                        <div class="hotel-info">
+                            <h3 class="hotel-name">Park Plaza Amsterdam Airport or Similar</h3>
+                            <div class="hotel-details">
+                                <p><i class="fas fa-moon"></i> 2 nights in Amsterdam</p>
+                                <p><i class="fas fa-bed"></i> Room Type: Standard Room</p>
+                                <p><i class="fas fa-coffee"></i> Meals Included: Breakfast</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hotel-card">
+                        <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=200&fit=crop" 
+                             alt="The Jangle Hotel Paris" class="hotel-image">
+                        <div class="hotel-info">
+                            <h3 class="hotel-name">The Jangle Hotel – Paris – Charles de Gaulle Airport or Similar</h3>
+                            <div class="hotel-details">
+                                <p><i class="fas fa-moon"></i> 3 nights in Paris</p>
+                                <p><i class="fas fa-bed"></i> Room Type: Standard Room</p>
+                                <p><i class="fas fa-coffee"></i> Meals Included: Breakfast</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Included in the price</h2>
+                <div class="included-section" id="inclusionsList">
+                    <div class="destination-group">
+                        <h3 class="destination-header">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Amsterdam
+                        </h3>
+                        <ul class="included-list">
+                            <li>Visit to Keukenhof Gardens (till 12th May) or Zaanse Schans (after 13th May)</li>
+                            <li>Glass-roof canal cruise through historic Amsterdam</li>
+                            <li>Orientation tour covering Dam Square</li>
+                            <li>Visit to a Wooden Shoe Factory and Cheese Farm</li>
+                            <li>Services of an experienced English- and Hindi-speaking Tour Manager</li>
+                            <li>All driver and tour manager tips included</li>
+                            <li>Daily Indian dinners</li>
+                        </ul>
+                    </div>
+                    <div class="destination-group">
+                        <h3 class="destination-header">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Paris
+                        </h3>
+                        <ul class="included-list">
+                            <li>Guided city tour covering Champs-Élysées, Arc de Triomphe, Place de la Concorde, and more</li>
+                            <li>Eiffel Tower – 2nd Level Entry</li>
+                            <li>Scenic Seine River Cruise</li>
+                            <li>Full-day visit to Disneyland Paris</li>
+                            <li>Photo stop at the Atomium</li>
+                            <li>Visit to Grand Place and Manneken Pis Statue</li>
+                            <li>1 Indian Lunch at Brussels</li>
+                            <li>Daily Indian dinners</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Day-wise Itinerary</span>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">Day 1: Arrival in Amsterdam</h4>
+                            <p>Arrive at Amsterdam Airport and transfer to your hotel. Evening at leisure to explore the city on your own. Overnight stay in Amsterdam.</p>
+                            
+                            <h4 style="color: var(--primary-color); margin-top: 1.5rem; margin-bottom: 0.5rem;">Day 2: Amsterdam City Tour</h4>
+                            <p>After breakfast, embark on a guided city tour including a glass-roof canal cruise, visit to Dam Square, wooden shoe factory, and cheese farm. Visit Keukenhof Gardens (seasonal) or Madurodam. Dinner and overnight in Amsterdam.</p>
+                            
+                            <h4 style="color: var(--primary-color); margin-top: 1.5rem; margin-bottom: 0.5rem;">Day 3: Amsterdam to Paris via Brussels</h4>
+                            <p>Check out and drive to Paris with a stop in Brussels. Visit the Grand Place, Manneken Pis statue, and photo stop at Atomium. Enjoy Indian lunch in Brussels. Continue to Paris for dinner and overnight stay.</p>
+                            
+                            <h4 style="color: var(--primary-color); margin-top: 1.5rem; margin-bottom: 0.5rem;">Day 4: Paris City Tour</h4>
+                            <p>After breakfast, enjoy a guided city tour of Paris covering Champs-Élysées, Arc de Triomphe, Place de la Concorde, and more. Visit the Eiffel Tower (2nd level). Evening Seine River Cruise. Dinner and overnight in Paris.</p>
+                            
+                            <h4 style="color: var(--primary-color); margin-top: 1.5rem; margin-bottom: 0.5rem;">Day 5: Disneyland Paris</h4>
+                            <p>Full day at Disneyland Paris. Explore the magical world of Disney with thrilling rides, shows, and attractions. Dinner and overnight in Paris.</p>
+                            
+                            <h4 style="color: var(--primary-color); margin-top: 1.5rem; margin-bottom: 0.5rem;">Day 6: Departure from Paris</h4>
+                            <p>After breakfast, check out and transfer to Paris Airport for your return flight home with wonderful memories.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>What to Expect</span>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p><strong>Cultural Immersion:</strong> Experience the rich history and culture of Amsterdam and Paris through guided tours and iconic landmarks.</p>
+                            <p style="margin-top: 1rem;"><strong>Comfortable Travel:</strong> Enjoy comfortable 4-star accommodations and hassle-free transportation throughout the journey.</p>
+                            <p style="margin-top: 1rem;"><strong>Culinary Delights:</strong> Savor a mix of Continental breakfasts and authentic Indian meals (Veg/Non-Veg/Jain options available).</p>
+                            <p style="margin-top: 1rem;"><strong>Expert Guidance:</strong> Benefit from the knowledge and assistance of experienced English and Hindi-speaking tour managers.</p>
+                            <p style="margin-top: 1rem;"><strong>Memorable Experiences:</strong> Create lasting memories with visits to world-famous attractions, scenic cruises, and magical Disneyland Paris.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Exclusions</span>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul style="list-style: disc; padding-left: 2rem;">
+                                <li>Travel insurance</li>
+                                <li>Visa fees and processing charges</li>
+                                <li>Personal expenses such as laundry, telephone calls, tips, etc.</li>
+                                <li>Any meals not mentioned in the inclusions</li>
+                                <li>Optional tours and activities</li>
+                                <li>Porterage at hotels and airports</li>
+                                <li>Any increase in taxes or fuel surcharges</li>
+                                <li>Anything not specifically mentioned in the inclusions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Terms and Conditions</span>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p><strong>Booking and Payment:</strong> A non-refundable deposit of 25% is required at the time of booking. Full payment must be made 45 days prior to departure.</p>
+                            <p style="margin-top: 1rem;"><strong>Cancellation Policy:</strong> Cancellations made 45+ days before departure: 25% of total cost. 30-44 days: 50% of total cost. 15-29 days: 75% of total cost. Less than 15 days: 100% of total cost.</p>
+                            <p style="margin-top: 1rem;"><strong>Travel Documents:</strong> Valid passport (minimum 6 months validity) and appropriate visas are the responsibility of the traveler.</p>
+                            <p style="margin-top: 1rem;"><strong>Health and Safety:</strong> Travelers must ensure they are medically fit to travel and have appropriate travel insurance.</p>
+                            <p style="margin-top: 1rem;"><strong>Itinerary Changes:</strong> TripCircle reserves the right to modify the itinerary due to unforeseen circumstances while maintaining the overall tour value.</p>
+                            <p style="margin-top: 1rem;"><strong>Liability:</strong> TripCircle acts only as an agent and is not responsible for any loss, injury, or damage during the tour.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <aside class="sticky-pricing-card">
+            <div class="label">Starting From</div>
+            <div class="price" id="sidebarPrice">₹ 175,540</div>
+            <button class="btn-primary" onclick="handleBookNow()">Book Now</button>
+            <button class="btn-secondary" onclick="handleEnquire()">Enquire Now</button>
+        </aside>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div>© TripCircle</div>
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="support-widget" onclick="handleSupport()">
+        <i class="fas fa-headset"></i>
+        <span>We are here to help</span>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5050';
+        let currentPackageId = null;
+
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = mobileMenuToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.accordion-icon');
+            
+            document.querySelectorAll('.accordion-header').forEach(h => {
+                if (h !== header) {
+                    h.classList.remove('active');
+                    h.nextElementSibling.classList.remove('active');
+                }
+            });
+
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+
+        function handleBookNow() {
+            console.log('Book Now clicked - Opening booking flow');
+            if (currentPackageId) {
+                window.location.href = `booking_flow.html?pkg_id=${currentPackageId}`;
+            } else {
+                alert('Package information not loaded. Please refresh the page.');
+            }
+        }
+
+        async function handleEnquire() {
+            console.log('Enquire Now clicked - Opening enquiry form');
+            
+            const email = prompt('Please enter your email address:');
+            if (!email) return;
+            
+            const phone = prompt('Please enter your phone number (10 digits):');
+            if (!phone) return;
+            
+            const city = prompt('Please enter your city:');
+            if (!city) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/submit_enquiry`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contact_details: {
+                            email: email,
+                            phone: phone,
+                            city: city
+                        },
+                        package_id: currentPackageId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    alert(`Enquiry submitted successfully!\n\nReference: ${result.ref}\n\nOur travel experts will contact you within 24 hours.`);
+                } else {
+                    alert('Enquiry submission failed: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Enquiry error:', error);
+                alert('An error occurred while submitting your enquiry. Please try again.');
+            }
+        }
+
+        function handleSupport() {
+            console.log('Support widget clicked - Opening chat');
+            alert('Live chat support\n\nHow can we help you today?\n\nOur support team is available 24/7.');
+        }
+
+        let lastScroll = 0;
+        const header = document.querySelector('.header');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            } else {
+                header.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    const menu = toggle.nextElementSibling;
+                    menu.classList.toggle('active');
+                }
+            });
+        });
+
+        document.querySelectorAll('button, a').forEach(element => {
+            element.addEventListener('click', (e) => {
+                console.log('User interaction:', {
+                    element: e.target.tagName,
+                    text: e.target.textContent.trim(),
+                    timestamp: new Date().toISOString()
+                });
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.setAttribute('tabindex', '0');
+            header.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleAccordion(header);
+                }
+            });
+        });
+
+        if ('loading' in HTMLImageElement.prototype) {
+            const images = document.querySelectorAll('img[loading="lazy"]');
+            images.forEach(img => {
+                img.src = img.dataset.src;
+            });
+        }
+
+        async function loadPackageDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pkgId = urlParams.get('pkg_id');
+
+            if (!pkgId) {
+                console.error('No package ID provided');
+                alert('No package selected. Redirecting to homepage...');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            currentPackageId = pkgId;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/get_package_details/${pkgId}`);
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const pkg = result.data;
+                    console.log('Package details loaded:', pkg);
+
+                    document.getElementById('packageName').textContent = pkg.name;
+                    document.getElementById('packageItinerary').textContent = pkg.itinerary;
+                    document.getElementById('packageDuration').textContent = `${pkg.duration} days`;
+                    
+                    if (pkg.description) {
+                        const descElement = document.getElementById('packageDescription');
+                        descElement.innerHTML = `<p>${pkg.description}</p>`;
+                    }
+
+                    document.title = `${pkg.name} - TripCircle`;
+                } else {
+                    alert('Failed to load package details: ' + result.message);
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error('Error loading package details:', error);
+                alert('An error occurred while loading package details. Please try again.');
+                window.location.href = 'index.html';
+            }
+        }
+
+        window.addEventListener('load', () => {
+            loadPackageDetails();
+            console.log('Page Performance:', {
+                loadTime: performance.now(),
+                domContentLoaded: performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart,
+                fullyLoaded: performance.timing.loadEventEnd - performance.timing.navigationStart
+            });
+        });
+    </script>
+</body>
+</html>

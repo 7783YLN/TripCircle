@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripCircle - Book Your Perfect Holiday</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            padding: 1rem 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .dropdown:hover .dropdown-menu,
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .cta-button {
+            background-color: #2563eb;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .hero {
+            position: relative;
+            height: 600px;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&h=900&fit=crop') center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .search-panel {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            max-width: 1200px;
+            width: 90%;
+            margin-top: 2rem;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-button {
+            background-color: #2563eb;
+            color: #ffffff;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: fit-content;
+        }
+
+        .search-button:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .packages-section {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: #1f2937;
+            text-align: center;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .package-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .package-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .package-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .package-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #1f2937;
+        }
+
+        .package-itinerary {
+            font-size: 0.95rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .package-rating {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 1rem;
+            color: #fbbf24;
+        }
+
+        .package-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .package-price span {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .footer {
+            background-color: #f9fafb;
+            padding: 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-copyright {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-icons a {
+            color: #6b7280;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: #2563eb;
+            transform: translateY(-3px);
+        }
+
+        .support-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #2563eb;
+            color: #ffffff;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 999;
+        }
+
+        .support-widget:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.5);
+        }
+
+        .support-widget i {
+            font-size: 1.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: #ffffff;
+                flex-direction: column;
+                padding: 2rem;
+                transition: left 0.3s ease;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .support-widget {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                margin-top: 0.5rem;
+                display: none;
+            }
+
+            .dropdown-menu.active {
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                height: 500px;
+            }
+
+            .search-panel {
+                padding: 1.5rem;
+            }
+
+            .packages-section {
+                padding: 0 1rem;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .package-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        *:focus {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+
+        button:focus,
+        a:focus {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header" role="banner">
+        <div class="header-container">
+            <a href="#" class="logo" aria-label="TripCircle Home">
+                <i class="fas fa-globe-americas"></i>
+                TripCircle
+            </a>
+            
+            <nav role="navigation">
+                <ul class="nav-links" id="navLinks">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" id="destinationsToggle" aria-haspopup="true" aria-expanded="false">
+                            Destinations <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="dropdown-menu" id="destinationsMenu" role="menu">
+                            <a href="#" role="menuitem">France</a>
+                            <a href="#" role="menuitem">Netherlands</a>
+                            <a href="#" role="menuitem">The United Kingdom</a>
+                            <a href="#" role="menuitem">Switzerland</a>
+                            <a href="#" role="menuitem">Germany</a>
+                            <a href="#" role="menuitem">Italy</a>
+                        </div>
+                    </li>
+                    <li><a href="#">My Booking</a></li>
+                    <li><a href="#">Organize a Group</a></li>
+                    <li><a href="#" class="cta-button">Book With Expert</a></li>
+                </ul>
+            </nav>
+
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <section class="hero" role="banner">
+        <div class="hero-content">
+            <h1>Book Your Perfect Holiday</h1>
+            <p>Choose trips from our collection and plan your perfect trip</p>
+        </div>
+
+        <div class="search-panel" role="search">
+            <form class="search-form" id="searchForm">
+                <div class="form-group">
+                    <label for="leavingFrom">Leaving From</label>
+                    <input type="text" id="leavingFrom" value="Mumbai" aria-label="Leaving from location">
+                </div>
+                <div class="form-group">
+                    <label for="destination">Destination</label>
+                    <input type="text" id="destination" placeholder="Where to?" aria-label="Destination">
+                </div>
+                <div class="form-group">
+                    <label for="leavingOn">Leaving On</label>
+                    <input type="text" id="leavingOn" placeholder="Select date" aria-label="Departure date">
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration</label>
+                    <select id="duration" aria-label="Trip duration">
+                        <option value="3">3-4 nights</option>
+                        <option value="5" selected>5-6 nights</option>
+                        <option value="7">7-8 nights</option>
+                        <option value="9">9-10 nights</option>
+                        <option value="10">10+ nights</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="travelers">Number of Travelers</label>
+                    <select id="travelers" aria-label="Number of travelers">
+                        <option value="1">1 Adult</option>
+                        <option value="2" selected>2 Adults</option>
+                        <option value="3">3 Adults</option>
+                        <option value="4">4 Adults</option>
+                        <option value="5">5+ Adults</option>
+                    </select>
+                </div>
+                <button type="submit" class="search-button" aria-label="Search packages">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <section class="packages-section">
+        <h2 class="section-title">Holiday Packages – 2026</h2>
+        <div class="packages-grid" id="packagesGrid">
+            <article class="package-card" tabindex="0" role="button" aria-label="Amsterdam & Paris Classic package" data-pkg-id="pkg1">
+                <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=400&h=300&fit=crop" alt="Amsterdam & Paris" class="package-image">
+                <div class="package-content">
+                    <h3 class="package-title">Amsterdam & Paris Classic</h3>
+                    <p class="package-itinerary">Amsterdam 2N, Paris 3N</p>
+                    <div class="package-rating" aria-label="4 star rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <p class="package-price"><span>Starting From</span> ₹ 175,540</p>
+                </div>
+            </article>
+
+            <article class="package-card" tabindex="0" role="button" aria-label="Elegant Escapes – Paris & London package" data-pkg-id="pkg2">
+                <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&h=300&fit=crop" alt="Paris & London" class="package-image">
+                <div class="package-content">
+                    <h3 class="package-title">Elegant Escapes – Paris & London</h3>
+                    <p class="package-itinerary">Paris 3N, London 3N</p>
+                    <div class="package-rating" aria-label="4 star rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <p class="package-price"><span>Starting From</span> ₹ 209,377</p>
+                </div>
+            </article>
+
+            <article class="package-card" tabindex="0" role="button" aria-label="Paris & Swiss Charm package" data-pkg-id="pkg3">
+                <img src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?w=400&h=300&fit=crop" alt="Paris & Switzerland" class="package-image">
+                <div class="package-content">
+                    <h3 class="package-title">Paris & Swiss Charm</h3>
+                    <p class="package-itinerary">Paris 3N, Geneva 2N, Zurich 2N</p>
+                    <div class="package-rating" aria-label="4 star rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <p class="package-price"><span>Starting From</span> ₹ 230,850</p>
+                </div>
+            </article>
+
+            <article class="package-card" tabindex="0" role="button" aria-label="Swiss Paris at a Glance package" data-pkg-id="pkg4">
+                <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=400&h=300&fit=crop" alt="Switzerland & Paris" class="package-image">
+                <div class="package-content">
+                    <h3 class="package-title">Swiss Paris at a Glance</h3>
+                    <p class="package-itinerary">Zurich 3N, Paris 3N</p>
+                    <div class="package-rating" aria-label="4 star rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <p class="package-price"><span>Starting From</span> ₹ 188,554</p>
+                </div>
+            </article>
+
+            <article class="package-card" tabindex="0" role="button" aria-label="Wonders of Europe – 2026 package" data-pkg-id="pkg5">
+                <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&h=300&fit=crop" alt="Wonders of Europe" class="package-image">
+                <div class="package-content">
+                    <h3 class="package-title">Wonders of Europe – 2026</h3>
+                    <p class="package-itinerary">Paris 3N, Amsterdam 1N, Frankfurt 1N …</p>
+                    <div class="package-rating" aria-label="5 star rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="package-price"><span>Starting From</span> ₹ 303,728</p>
+                </div>
+            </article>
+
+            <article class="package-card" tabindex="0" role="button" aria-label="Grand Tour of Europe – 2026 package" data-pkg-id="pkg6">
+                <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&h=300&fit=crop" alt="Grand Tour of Europe" class="package-image">
+                <div class="package-content">
+                    <h3 class="package-title">Grand Tour of Europe – 2026</h3>
+                    <p class="package-itinerary">London 3N, Paris 3N, Amsterdam 1N …</p>
+                    <div class="package-rating" aria-label="5 star rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="package-price"><span>Starting From</span> ₹ 385,485</p>
+                </div>
+            </article>
+
+            <article class="package-card" tabindex="0" role="button" aria-label="Italy Swiss Paris – 2026 package" data-pkg-id="pkg7">
+                <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=400&h=300&fit=crop" alt="Italy Swiss Paris" class="package-image">
+                <div class="package-content">
+                    <h3 class="package-title">Italy Swiss Paris – 2026</h3>
+                    <p class="package-itinerary">Rome 2N, Ferrara 1N, Milan 1N, Zurich …</p>
+                    <div class="package-rating" aria-label="4 star rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <p class="package-price"><span>Starting From</span> ₹ 251,866</p>
+                </div>
+            </article>
+
+            <article class="package-card" tabindex="0" role="button" aria-label="Glimpses of Europe – 2026 package" data-pkg-id="pkg8">
+                <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=300&fit=crop" alt="Glimpses of Europe" class="package-image">
+                <div class="package-content">
+                    <h3 class="package-title">Glimpses of Europe – 2026</h3>
+                    <p class="package-itinerary">Paris 3N, Amsterdam 1N, Frankfurt 1N …</p>
+                    <div class="package-rating" aria-label="4 star rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <p class="package-price"><span>Starting From</span> ₹ 233,514</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <footer class="footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-copyright">
+                © TripCircle
+            </div>
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+            <div></div>
+        </div>
+    </footer>
+
+    <div class="support-widget" role="button" tabindex="0" aria-label="Customer support">
+        <i class="fas fa-headset"></i>
+        <span>We are here to help</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        const API_BASE_URL = 'http://localhost:5050';
+
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const isExpanded = navLinks.classList.contains('active');
+            mobileMenuToggle.setAttribute('aria-expanded', isExpanded);
+            
+            const icon = mobileMenuToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        const destinationsToggle = document.getElementById('destinationsToggle');
+        const destinationsMenu = document.getElementById('destinationsMenu');
+
+        destinationsToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            destinationsMenu.classList.toggle('active');
+            const isExpanded = destinationsMenu.classList.contains('active');
+            destinationsToggle.setAttribute('aria-expanded', isExpanded);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                destinationsMenu.classList.remove('active');
+                destinationsToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        flatpickr("#leavingOn", {
+            minDate: "today",
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "F j, Y",
+            onChange: function(selectedDates, dateStr, instance) {
+                console.log('Date selected:', dateStr);
+            }
+        });
+
+        const searchForm = document.getElementById('searchForm');
+        searchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                "Leaving From": document.getElementById('leavingFrom').value,
+                "Destination": document.getElementById('destination').value,
+                "Leaving On": document.getElementById('leavingOn').value,
+                "Duration": document.getElementById('duration').value,
+                "Traveller Count": document.getElementById('travelers').value
+            };
+
+            console.log('Search submitted:', formData);
+            
+            if (!formData["Destination"]) {
+                alert('Please enter a destination');
+                return;
+            }
+            
+            if (!formData["Leaving On"]) {
+                alert('Please select a departure date');
+                return;
+            }
+
+            const searchButton = searchForm.querySelector('.search-button');
+            const originalText = searchButton.innerHTML;
+            searchButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
+            searchButton.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/search_packages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    console.log('Search results:', result.data);
+                    alert(`Found ${result.data.length} package(s)!\n\n${result.data.map(p => p.name).join('\n')}`);
+                    
+                    document.querySelector('.packages-section').scrollIntoView({ 
+                        behavior: 'smooth' 
+                    });
+                } else {
+                    alert('Search failed: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                alert('An error occurred while searching. Please try again.');
+            } finally {
+                searchButton.innerHTML = originalText;
+                searchButton.disabled = false;
+            }
+        });
+
+        const packageCards = document.querySelectorAll('.package-card');
+        packageCards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                const pkgId = card.getAttribute('data-pkg-id');
+                console.log(`Package ${pkgId} clicked`);
+                window.location.href = `package_detail.html?pkg_id=${pkgId}`;
+            });
+
+            card.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    card.click();
+                }
+            });
+        });
+
+        const supportWidget = document.querySelector('.support-widget');
+        supportWidget.addEventListener('click', () => {
+            console.log('Support widget clicked');
+            alert('Opening support chat...');
+        });
+
+        supportWidget.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                supportWidget.click();
+            }
+        });
+
+        let lastScroll = 0;
+        const header = document.querySelector('.header');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll <= 0) {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        const destinationInput = document.getElementById('destination');
+        const destinations = ['France', 'Netherlands', 'The United Kingdom', 'Switzerland', 'Germany', 'Italy', 'Spain', 'Portugal', 'Austria', 'Belgium'];
+
+        destinationInput.addEventListener('input', (e) => {
+            const value = e.target.value.toLowerCase();
+            if (value.length > 0) {
+                const matches = destinations.filter(dest => 
+                    dest.toLowerCase().includes(value)
+                );
+                console.log('Matching destinations:', matches);
+            }
+        });
+
+        console.log('TripCircle Homepage loaded successfully');
+        console.log('Total packages displayed:', packageCards.length);
+
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.src;
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.package-image').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+
+        function announceToScreenReader(message) {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('role', 'status');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.className = 'sr-only';
+            announcement.textContent = message;
+            document.body.appendChild(announcement);
+            
+            setTimeout(() => {
+                document.body.removeChild(announcement);
+            }, 1000);
+        }
+
+        const formInputs = document.querySelectorAll('.form-group input, .form-group select');
+        formInputs.forEach(input => {
+            input.addEventListener('invalid', (e) => {
+                e.preventDefault();
+                input.style.borderColor = '#ef4444';
+                announceToScreenReader(`Please fill in the ${input.previousElementSibling.textContent} field`);
+            });
+
+            input.addEventListener('input', () => {
+                input.style.borderColor = '#d1d5db';
+            });
+        });
+        async function handleSearch(event) {
+            event.preventDefault(); 
+            
+            const destInput = document.getElementById('destination').value;
+            const leaveInput = document.getElementById('leavingFrom').value;
+            
+            
+            const url = `http://127.0.0.1:5050/search_packages?Destination=${destInput}&Leaving%20From=${leaveInput}`;
+            
+            try {
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const grid = document.querySelector('.packages-grid');
+                    grid.innerHTML = ''; 
+
+                    if (result.data.length === 0) {
+                        grid.innerHTML = '<p>No packages found for this destination.</p>';
+                        return;
+                    }
+
+                    result.data.forEach(pkg => {
+                        const card = `
+                            <div class="package-card" onclick="window.location.href='package_detail.html?pkg_id=${pkg.id}'">
+                                <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800" class="package-image">
+                                <div class="package-content">
+                                    <h3 class="package-title">${pkg.name}</h3>
+                                    <p class="package-itinerary">${pkg.itinerary}</p>
+                                    <div class="package-price">₹${pkg.departure_dates[0].price_per_person}</div>
+                                </div>
+                            </div>`;
+                        grid.insertAdjacentHTML('beforeend', card);
+                    });
+                }
+            } catch (err) {
+                console.error("Search failed", err);
+            }
+        }
+        const destinationField = document.getElementById('destination');
+        const packagesGrid = document.getElementById('packagesGrid');
+        const allPackageCards = Array.from(document.querySelectorAll('.package-card'));
+
+        function filterPackagesByDestination() {
+            const query = destinationField.value.trim().toLowerCase();
+
+            let visibleCount = 0;
+
+            allPackageCards.forEach(card => {
+                const itinerary = card
+                    .querySelector('.package-itinerary')
+                    .textContent
+                    .toLowerCase();
+
+                if (!query || itinerary.includes(query)) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            console.log(`Filtered packages count: ${visibleCount}`);
+        }
+
+
+        destinationField.addEventListener('input', filterPackagesByDestination);
+
+    </script>
+</body>
+</html>
