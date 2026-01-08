@@ -745,7 +745,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        const API_BASE_URL = 'http://localhost:5050';
+        const API_BASE_URL = '';
 
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const navLinks = document.getElementById('navLinks');
@@ -954,7 +954,7 @@
             const leaveInput = document.getElementById('leavingFrom').value;
             
             
-            const url = `http://127.0.0.1:5050/search_packages?Destination=${destInput}&Leaving%20From=${leaveInput}`;
+            const url = `${API_BASE_URL}/search_packages?Destination=${destInput}&Leaving%20From=${leaveInput}`;
             
             try {
                 const response = await fetch(url);
