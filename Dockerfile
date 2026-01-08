@@ -1,26 +1,21 @@
-# Use Python 3.11 slim image
+# Use an official lightweight Python image
 FROM python:3.11-slim
 
-# Set working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl build-essential && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Copy Python dependencies first
+# Copy the requirements file first to leverage Docker cache
 COPY requirements.txt .
 
-# Install dependencies + gunicorn
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install gunicorn
 
-# Copy app files
+# Copy the rest of your application code
 COPY . .
 
-# Expose Flask port
-EXPOSE 5000
+# Expose the port (Render uses $PORT environment variable)
+EXPOSE 10000
 
-# Run app with Gunicorn
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
+# Run the app using Gunicorn
+# app:app refers to app.py and the Flask instance named 'app'
+CMD ["gunicorn", "-b", "0.0.0.0:10000", "app:app"]
