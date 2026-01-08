@@ -1,21 +1,9 @@
- 
 services:
-  app:
-    # Service name derived from application
-    container_name: TripCircle-container
-   
-    # # Build from local Dockerfile
-    #build:
-    #  context: .
-    #  dockerfile: Dockerfile
-   
-    # Use the built image
-    image: nisoka7/tripcircle:v2
-   
-    # Map container port to host port
+  web:
+    build: .
     ports:
-      - "5050:5000"
-   
-    # Set working directory
-    working_dir: /app
- 
+      - "5000:10000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
