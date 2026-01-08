@@ -7,7 +7,7 @@ from dateutil import parser
 from dateutil.relativedelta import relativedelta
 from flask_cors import CORS
 
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__, template_folder='.')
 CORS(app)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("travel_booking_controller")
